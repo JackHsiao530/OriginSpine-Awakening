@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, ArrowUpRight, Plus, Minus } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Button } from '../components/Button';
 import { SectionTitle } from '../components/SectionTitle';
 import { PAGES, PageType } from '../constants';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface HomePageProps {
   onNavigate: (page: PageType) => void;
@@ -11,8 +15,68 @@ interface HomePageProps {
 
 export const HomePage = ({ onNavigate }: HomePageProps) => {
   const [activeCoach, setActiveCoach] = useState<number | null>(null);
-  const { scrollYProgress } = useScroll();
-  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, 100]);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const philosophyRef = useRef<HTMLDivElement>(null);
+  const philosophyImageRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Hero Parallax
+    if (heroRef.current) {
+      gsap.to(heroRef.current.querySelector('.hero-bg'), {
+        yPercent: 30,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    }
+
+    // Philosophy Image Parallax
+    if (philosophyImageRef.current) {
+      gsap.to(philosophyImageRef.current.querySelector('img'), {
+        yPercent: 20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: philosophyRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    }
+
+    // Stats Counter Animation (Simulated with GSAP)
+    if (statsRef.current) {
+      const stats = statsRef.current.querySelectorAll('.stat-value');
+      stats.forEach(stat => {
+        const target = parseFloat(stat.getAttribute('data-target') || '0');
+        const suffix = stat.getAttribute('data-suffix') || '';
+        const obj = { value: 0 };
+        
+        gsap.to(obj, {
+          value: target,
+          duration: 2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: stat,
+            start: "top 90%",
+            once: true
+          },
+          onUpdate: () => {
+            stat.textContent = Math.floor(obj.value) + suffix;
+          }
+        });
+      });
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, []);
 
   const coaches = [
     { 
@@ -68,11 +132,8 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <div className="relative h-screen w-full overflow-hidden bg-[#F0F2F5]">
-        <motion.div 
-          style={{ y: heroY }}
-          className="absolute inset-0 z-0"
-        >
+      <div ref={heroRef} className="relative h-screen w-full overflow-hidden bg-[#F0F2F5]">
+        <div className="absolute inset-0 z-0 hero-bg scale-110">
            <img 
              src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop" 
              alt="Hero Background" 
@@ -80,7 +141,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
              referrerPolicy="no-referrer"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#1A2B48]/90 via-[#1A2B48]/40 to-transparent"></div>
-        </motion.div>
+        </div>
 
         <div className="relative z-10 h-full max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col justify-center">
            <motion.div 
@@ -117,7 +178,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       </div>
 
       {/* Philosophy Section */}
-      <section className="py-24 md:py-32 bg-white">
+      <section ref={philosophyRef} className="py-24 md:py-32 bg-white">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
              <motion.div 
@@ -176,11 +237,11 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
                viewport={{ once: true }}
                className="lg:col-span-5 h-full relative mt-12 lg:mt-0"
              >
-                <div className="lg:sticky lg:top-32 w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] image-hover-zoom">
+                <div ref={philosophyImageRef} className="lg:sticky lg:top-32 w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl">
                    <img 
                      src="https://hinomethod.com.tw/wp-content/uploads/2024/10/20240923_%E6%97%A5%E9%87%8E%E5%AE%98%E7%B6%B2_banner-03.jpg" 
                      alt="Philosophy" 
-                     className="w-full h-full object-cover object-right"
+                     className="w-full h-full object-cover object-right scale-125"
                      referrerPolicy="no-referrer"
                    />
                 </div>
@@ -245,7 +306,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-24 bg-white">
+      <section ref={statsRef} className="py-24 bg-white">
          <div className="max-w-[1920px] mx-auto px-6 md:px-12">
             <motion.div 
               variants={staggerContainer}
@@ -255,12 +316,18 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
               className="grid md:grid-cols-3 gap-12 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100"
             >
                {[
-                 { val: "92%", label: "疼痛緩解率" },
-                 { val: "3x", label: "投資回報率 (ROI)" },
-                 { val: "500+", label: "專業認證教練" }
+                 { val: "92", suffix: "%", label: "疼痛緩解率" },
+                 { val: "3", suffix: "x", label: "投資回報率 (ROI)" },
+                 { val: "500", suffix: "+", label: "專業認證教練" }
                ].map((stat, i) => (
                  <motion.div key={i} variants={fadeInUp} className="py-8 md:py-0">
-                    <span className="block text-6xl md:text-7xl font-display font-bold text-[#1A2B48] mb-2">{stat.val}</span>
+                    <span 
+                      className="stat-value block text-6xl md:text-7xl font-display font-bold text-[#1A2B48] mb-2"
+                      data-target={stat.val}
+                      data-suffix={stat.suffix}
+                    >
+                      0{stat.suffix}
+                    </span>
                     <span className="text-sm font-bold tracking-widest uppercase text-gray-400">{stat.label}</span>
                  </motion.div>
                ))}
