@@ -63,22 +63,26 @@ export const AboutPage = () => {
             viewport={{ once: true }}
             className="grid grid-cols-2 gap-4 relative"
           >
-             <div className="image-hover-zoom rounded-lg transform translate-y-12 shadow-lg z-10">
-               <img 
-                 src="https://hinomethod.com.tw/wp-content/uploads/2024/10/DSC_6320_%E4%BF%AE-e1730262104315.jpg" 
-                 className="w-full h-[300px] md:h-[400px] object-cover"
-                 alt="Philosophy 1" 
-                 referrerPolicy="no-referrer"
-               />
-             </div>
-             <div className="image-hover-zoom rounded-lg shadow-lg">
-               <img 
-                 src="https://hinomethod.com.tw/wp-content/uploads/2024/10/77318032-B80D-4095-B743-F2F7A58EDCB4-e1730092445901.jpg" 
-                 className="w-full h-[300px] md:h-[400px] object-cover"
-                 alt="Philosophy 2" 
-                 referrerPolicy="no-referrer"
-               />
-             </div>
+              <div className="image-hover-zoom rounded-lg transform translate-y-12 shadow-lg z-10">
+                <img 
+                  src="https://hinomethod.com.tw/wp-content/uploads/2024/10/DSC_6320_%E4%BF%AE-e1730262104315.jpg" 
+                  className="w-full h-[300px] md:h-[400px] object-cover"
+                  alt="Philosophy 1" 
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="image-hover-zoom rounded-lg shadow-lg">
+                <img 
+                  src="https://hinomethod.com.tw/wp-content/uploads/2024/10/77318032-B80D-4095-B743-F2F7A58EDCB4-e1730092445901.jpg" 
+                  className="w-full h-[300px] md:h-[400px] object-cover"
+                  alt="Philosophy 2" 
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
           </motion.div>
         </div>
 

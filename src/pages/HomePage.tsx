@@ -17,6 +17,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
   const [activeCoach, setActiveCoach] = useState<number | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
+  const philosophyContentRef = useRef<HTMLDivElement>(null);
   const philosophyImageRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +36,21 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       });
     }
 
+    // Philosophy Image Pinning (Desktop only)
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 1024px)", () => {
+      if (philosophyRef.current && philosophyImageRef.current) {
+        ScrollTrigger.create({
+          trigger: philosophyRef.current,
+          start: "top 100px",
+          end: "bottom bottom",
+          pin: philosophyImageRef.current,
+          pinSpacing: false,
+          scrub: true,
+        });
+      }
+    });
+
     // Philosophy Image Parallax
     if (philosophyImageRef.current) {
       gsap.to(philosophyImageRef.current.querySelector('img'), {
@@ -49,7 +65,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       });
     }
 
-    // Stats Counter Animation (Simulated with GSAP)
+    // Stats Counter Animation
     if (statsRef.current) {
       const stats = statsRef.current.querySelectorAll('.stat-value');
       stats.forEach(stat => {
@@ -130,15 +146,17 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
   };
 
   return (
-    <div className="overflow-hidden">
+    <div>
       {/* Hero Section */}
       <div ref={heroRef} className="relative h-screen w-full overflow-hidden bg-[#F0F2F5]">
         <div className="absolute inset-0 z-0 hero-bg scale-110">
            <img 
-             src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop" 
+             src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1920&auto=format,compress&fit=crop" 
              alt="Hero Background" 
              className="w-full h-full object-cover filter grayscale contrast-125 opacity-90"
              referrerPolicy="no-referrer"
+             fetchPriority="high"
+             decoding="async"
            />
            <div className="absolute inset-0 bg-gradient-to-r from-[#1A2B48]/90 via-[#1A2B48]/40 to-transparent"></div>
         </div>
@@ -182,6 +200,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
         <div className="max-w-[1920px] mx-auto px-6 md:px-12">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
              <motion.div 
+               ref={philosophyContentRef}
                {...fadeInUp}
                className="lg:col-span-7 relative"
              >
@@ -230,22 +249,23 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
                 </Button>
              </motion.div>
 
-             <motion.div 
-               initial={{ opacity: 0, scale: 0.95 }}
-               whileInView={{ opacity: 1, scale: 1 }}
-               transition={{ duration: 1 }}
-               viewport={{ once: true }}
-               className="lg:col-span-5 h-full relative mt-12 lg:mt-0"
+             <div 
+               className="lg:col-span-5 relative mt-12 lg:mt-0"
              >
-                <div ref={philosophyImageRef} className="lg:sticky lg:top-32 w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl">
+                <div 
+                  ref={philosophyImageRef} 
+                  className="w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl z-10"
+                >
                    <img 
                      src="https://hinomethod.com.tw/wp-content/uploads/2024/10/20240923_%E6%97%A5%E9%87%8E%E5%AE%98%E7%B6%B2_banner-03.jpg" 
                      alt="Philosophy" 
                      className="w-full h-full object-cover object-right scale-125"
                      referrerPolicy="no-referrer"
+                     loading="lazy"
+                     decoding="async"
                    />
                 </div>
-             </motion.div>
+             </div>
           </div>
         </div>
       </section>
@@ -261,10 +281,12 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
            onClick={() => onNavigate(PAGES.CORPORATE)}
          >
            <img 
-             src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop" 
+             src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200&auto=format,compress&fit=crop" 
              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale group-hover:grayscale-0 opacity-50"
              alt="Corporate"
              referrerPolicy="no-referrer"
+             loading="lazy"
+             decoding="async"
            />
            <div className="absolute inset-0 bg-[#1A2B48]/10 group-hover:bg-[#1A2B48]/60 transition-colors duration-300"></div>
            <div className="relative h-full flex flex-col justify-center items-center text-center p-12 z-20">
@@ -287,10 +309,12 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
            onClick={() => onNavigate(PAGES.PROFESSIONAL)}
          >
             <img 
-             src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=2069&auto=format&fit=crop" 
+             src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=1200&auto=format,compress&fit=crop" 
              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter grayscale group-hover:grayscale-0 opacity-30"
              alt="Professional"
              referrerPolicy="no-referrer"
+             loading="lazy"
+             decoding="async"
            />
            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/60 transition-colors duration-300"></div>
            <div className="relative h-full flex flex-col justify-center items-center text-center p-12 z-20">
@@ -373,6 +397,8 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
                             alt={coach.name} 
                             className="w-full h-full object-cover object-top transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-105"
                             referrerPolicy="no-referrer"
+                            loading="lazy"
+                            decoding="async"
                          />
                          
                          <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#1A2B48] via-[#1A2B48]/80 to-transparent p-6 pt-12 text-white transition-opacity duration-300 group-hover:opacity-0 md:group-hover:opacity-0">
