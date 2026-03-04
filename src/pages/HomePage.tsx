@@ -131,7 +131,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
   };
 
   return (
-    <div>
+    <div className="overflow-hidden">
       {/* Hero Section */}
       <div ref={heroRef} className="relative h-screen w-full overflow-hidden bg-[#F0F2F5]">
         <div className="absolute inset-0 z-0 hero-bg scale-110">
@@ -183,7 +183,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       {/* Philosophy Section */}
       <section ref={philosophyRef} className="py-24 md:py-32 bg-white">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
              <motion.div 
                ref={philosophyContentRef}
                {...fadeInUp}
@@ -234,12 +234,16 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
                 </Button>
              </motion.div>
 
-             <div 
+             <motion.div 
+               initial={{ opacity: 0, scale: 0.95 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               transition={{ duration: 1 }}
+               viewport={{ once: true }}
                className="lg:col-span-5 relative mt-12 lg:mt-0"
              >
                 <div 
                   ref={philosophyImageRef} 
-                  className="lg:sticky lg:top-32 w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl z-10"
+                  className="w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl"
                 >
                    <img 
                      src="https://hinomethod.com.tw/wp-content/uploads/2024/10/20240923_%E6%97%A5%E9%87%8E%E5%AE%98%E7%B6%B2_banner-03.jpg" 
@@ -250,7 +254,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
                      decoding="async"
                    />
                 </div>
-             </div>
+             </motion.div>
           </div>
         </div>
       </section>
