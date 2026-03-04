@@ -36,21 +36,6 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       });
     }
 
-    // Philosophy Image Pinning (Desktop only)
-    const mm = gsap.matchMedia();
-    mm.add("(min-width: 1024px)", () => {
-      if (philosophyRef.current && philosophyImageRef.current) {
-        ScrollTrigger.create({
-          trigger: philosophyRef.current,
-          start: "top 100px",
-          end: "bottom bottom",
-          pin: philosophyImageRef.current,
-          pinSpacing: false,
-          scrub: true,
-        });
-      }
-    });
-
     // Philosophy Image Parallax
     if (philosophyImageRef.current) {
       gsap.to(philosophyImageRef.current.querySelector('img'), {
@@ -198,7 +183,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
       {/* Philosophy Section */}
       <section ref={philosophyRef} className="py-24 md:py-32 bg-white">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
              <motion.div 
                ref={philosophyContentRef}
                {...fadeInUp}
@@ -254,7 +239,7 @@ export const HomePage = ({ onNavigate }: HomePageProps) => {
              >
                 <div 
                   ref={philosophyImageRef} 
-                  className="w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl z-10"
+                  className="lg:sticky lg:top-32 w-full h-[50vh] lg:h-[calc(100vh-16rem)] min-h-[500px] overflow-hidden rounded-2xl z-10"
                 >
                    <img 
                      src="https://hinomethod.com.tw/wp-content/uploads/2024/10/20240923_%E6%97%A5%E9%87%8E%E5%AE%98%E7%B6%B2_banner-03.jpg" 
